@@ -14,6 +14,12 @@
     // $mensajeEdad = ($edad >= MAYORIA_EDAD) ? "Soy mayor de edad" : "Soy menor de edad";
 
 ?>
+
 <h1>Bienvenido a mi sitio web en PHP</h1>
 <h2>Soy <?= $nombre ?> y tengo <?= $edad ?> años</h2>
 <h2><?php echo $mensajeEdad ?></h2>
+<?php   
+    for ($i = 1; $i<= 10; $i++){
+        echo "<h3>$i</h3>\n";
+    }
+?>
