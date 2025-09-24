@@ -12,6 +12,9 @@ Módulo Desarrollo WEB
 - **Descripción:** Introducción al lenguaje programación PHP.  
 - **Ejemplos incluidos:**  
   - Hello World  
+  - Ejercicio 1: Variables
+  - Ejercicio 2: Bucles y arrays
+  - Ejercicio Tipo Examen 
 - **Conceptos clave:** sintaxis básica, variables, bucles, funciones, clases
 
 ---
