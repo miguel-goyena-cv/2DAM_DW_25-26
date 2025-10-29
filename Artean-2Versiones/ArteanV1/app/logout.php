@@ -10,7 +10,7 @@
 
 require_once '../templates/header.php';
 
-if (isset($_SESSION['user']))
+if (SessionHelper::loggedIn())
 {
   SessionHelper::destroySession();
   echo "<div class='main'>Has salido de tu sesión. " ;

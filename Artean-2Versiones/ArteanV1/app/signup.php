@@ -9,24 +9,29 @@
  */
 
 require_once '../templates/header.php';
+require_once '../persistence/DAO/UserDAO.php';
 
-$error = $user = $pass = "";
+$error = "";
+$user = "";
+$pass = "";
 
 if (isset($_POST['email'])) {
 
-  // TODO Realiza la lectura de los campos del formulario en $user y $pass
-  
+  $user = $_POST['email'];
+  $pass = $_POST['password'];
+
 
   if ($user == "" || $pass == "") {
     $error = "Debes completar todos los campos<br><br>";
   }
   else {
     
-    // TODO Inserta el nuevo usuario atraves de un objeto UserDAO, este la utiliza el PersistenceManager
+    $userDao = new UserDAO();
+    $userDao->insert($user, $pass);
      
+    SessionHelper::setSession($user);
 
-    // TODO establece el usuario en sesión con SessionHelper
-    
+    header('Location: ../index.php');
 
   }
 }

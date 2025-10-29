@@ -10,6 +10,7 @@
  */
 
 require_once '../templates/header.php';
+require_once '../persistence/DAO/UserDAO.php';
 
 // Al pulsar el boton del formulario se recarga la misma página, volviendo a ejecutar este script.
 // En caso de que se haya  completado los valores del formulario se verifica la existencia de usuarios en la base de datos
@@ -25,27 +26,23 @@ if (isset($_POST['user']))
   else
   {
     
-    //TODO Comprueba que es correcta el User y PASS
-    //if ()
-    //{
-      //$error = "<span class='error'>Email/Contraseña invalida</span><br><br>";
-    //}
-    //else
-    //{
-      // TODO Realiza la gestión de la sesión de usuario utilizando SessionHelper
-      
+    $userDao = new UserDAO();
+    $existeUsuario = $userDao->checkExists($user, $pass);
+    if (!$existeUsuario)
+    {
+      $error = "<span class='error'>Email/Contraseña invalida</span><br><br>";
+    }
+    else
+    {
+      SessionHelper::setSession($user);
         
-      // TODO En caso de un registro  exitoso hacemos la redireccion correspondiente
-      
-    //}
+      header('Location: ../index.php');
+    }
   }
 }
-// TODO En caso de que no se haya completado el formulario,
-// analizamos si hay variable de sesión almacenada, volvemos a utilizar el SessionHelper
-//else if (){
-    // TODO En caso de que exista variable de sesión redireccionamos a la página principal
-     
-//}
+else if (SessionHelper::loggedIn()){
+    header('Location: ../index.php');  
+}
 ?>
 <div class="container">
   <form class="form-horizontal" role="form" method="POST" action="login.php">

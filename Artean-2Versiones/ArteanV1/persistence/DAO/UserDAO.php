@@ -4,7 +4,7 @@ require 'GenericDAO.php';
 class UserDAO extends GenericDAO {
 
   //Se define una constante con el nombre de la tabla
-  const USER_TABLE = 'users';
+  const USER_TABLE = 'usuarios';
 
   public function selectAll() {
     $query = "SELECT * FROM " . UserDAO::USER_TABLE;
@@ -13,7 +13,7 @@ class UserDAO extends GenericDAO {
     while ($userBD = mysqli_fetch_array($result)) {
       $user = array(
         'id' => $userBD["id"],
-        'email' => $userBD["email"],
+        'nombre' => $userBD["nombre"],
         'password' => $userBD["password"],
       );
       array_push($users, $user);
@@ -23,19 +23,22 @@ class UserDAO extends GenericDAO {
 
 
 
-  public function insert($email, $password) {
+  public function insert($nombre, $password) {
     $query = "INSERT INTO " . UserDAO::USER_TABLE .
-      " (email, password) VALUES(?,?)";
+      " (nombre, password) VALUES(?,?)";
     $stmt = mysqli_prepare($this->conn, $query);
-    mysqli_stmt_bind_param($stmt, 'ss', $email, $password);
+    mysqli_stmt_bind_param($stmt, 'ss', $nombre, $password);
     return $stmt->execute();
   }
 
-  public function checkExists($email, $password) {
-    $query = "SELECT email, password FROM " . UserDAO::USER_TABLE . " WHERE email=? AND password=?";
+  public function checkExists($nombre, $password) {
+    $query = "SELECT nombre, password FROM " . UserDAO::USER_TABLE . " WHERE nombre=? AND password=?";
     $stmt = mysqli_prepare($this->conn, $query);
-    mysqli_stmt_bind_param($stmt, 'ss', $email, $password);
-    if(mysqli_stmt_execute($stmt)>0)
+    mysqli_stmt_bind_param($stmt, 'ss', $nombre, $password);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_store_result($stmt);
+    $num_rows = mysqli_stmt_num_rows($stmt);
+    if( $num_rows>0)
       return true;
     else
       return false;
@@ -43,16 +46,16 @@ class UserDAO extends GenericDAO {
 
 
   public function selectById($id) {
-    $query = "SELECT email, password FROM " . UserDAO::USER_TABLE . " WHERE idUser=?";
+    $query = "SELECT nombre, password FROM " . UserDAO::USER_TABLE . " WHERE idUser=?";
     $stmt = mysqli_prepare($this->conn, $query);
     mysqli_stmt_bind_param($stmt, 'i', $id);
     mysqli_stmt_execute($stmt);
-    mysqli_stmt_bind_result($stmt, $email, $password);
+    mysqli_stmt_bind_result($stmt, $nombre, $password);
 
     while (mysqli_stmt_fetch($stmt)) {
       $user = array(
         'id' => $id,
- 				'email' => $email,
+ 				'nombre' => $nombre,
  				'password' => $password
  		);
        }
@@ -60,12 +63,12 @@ class UserDAO extends GenericDAO {
     return $user;
   }
 
-  public function update($id, $email, $password) {
+  public function update($id, $nombre, $password) {
     $query = "UPDATE " . UserDAO::USER_TABLE .
-      " SET email=?, password=?"
+      " SET nombre=?, password=?"
       . " WHERE idUser=?";
     $stmt = mysqli_prepare($this->conn, $query);
-    mysqli_stmt_bind_param($stmt, 'sssi', $email, $password, $id);
+    mysqli_stmt_bind_param($stmt, 'ssi', $nombre, $password, $id);
     return $stmt->execute();
   }
 
