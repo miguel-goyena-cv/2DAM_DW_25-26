@@ -52,6 +52,38 @@ paths:
                   $ref: '#/components/schemas/ErrorResponse'   
         '500':
           description: Any problem in server
+    post:
+      tags:
+        - restaurants
+      summary: Add a new restaurant.
+      description: Add a new restaurant.
+      operationId: addRestaurant
+      requestBody:
+        description: Create a new restaurant in the El teneder 4V
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestauranteNew'
+        required: true
+      responses:
+        '200':
+          description: Returns OK in the restaurants
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/Restaurante' 
+        '400':
+          description: Validation errors.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorResponse'   
+        '500':
+          description: Any problem in server
 components:
   schemas:
     Restaurante:
@@ -67,6 +99,16 @@ components:
         rest-type:
           type: object
           $ref: '#/components/schemas/RestaurantType'
+    RestauranteNew:
+      type: object
+      properties:
+        name:
+          type: string
+          example: La Taggliatella
+        rest-type:
+          type: integer
+          format: int64
+          example: 10
     RestaurantType:
       type: object
       properties:
