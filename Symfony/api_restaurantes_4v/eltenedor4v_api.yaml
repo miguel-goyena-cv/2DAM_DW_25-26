@@ -84,6 +84,23 @@ paths:
                   $ref: '#/components/schemas/ErrorResponse'   
         '500':
           description: Any problem in server
+  /restaurant-types:
+    get:
+      tags:
+        - restaurants-types
+      summary: Finds All Restaurant Types
+      operationId: findAllRestaurantTypes
+      responses:
+        '200':
+          description: Returns OK in all restaurant types
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RestaurantType' 
+        '500':
+          description: Any problem in server
 components:
   schemas:
     Restaurante:

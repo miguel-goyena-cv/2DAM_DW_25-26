@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Restaurant;
 use App\Model\RestauranteDTO;
 use App\Model\RespuestaErrorDTO;
 use App\Model\RestauranteNewDTO;
 use App\Model\RestaurantTypeDTO;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,7 +20,7 @@ final class RestaurantsController extends AbstractController
     private $restaurantes = [];
     private $restaurantesItalianos = [];
 
-    public function __construct(){
+    public function __construct(private EntityManagerInterface $entityManager) {
         $restauranteItaliano = new RestaurantTypeDTO(1,"Italiano");
         $restaurante1 = new RestauranteDTO(1, "La tagliatella", $restauranteItaliano);
         $restaurante2 = new RestauranteDTO(2, "La mamma", $restauranteItaliano);
@@ -41,13 +43,18 @@ final class RestaurantsController extends AbstractController
                 return new JsonResponse($errorMensaje, 400);
             }
 
-            // Recupero la información segun el tipo
-            if ($tipo == "Italiano"){
-                return $this->json($this->restaurantesItalianos);
+            // Recupero la información de BBDD
+            $restaurantesBBDD = $this->entityManager
+                                        ->getRepository(Restaurant::class)
+                                        ->findAll();
+            
+            // Convierto de Entidades a DTO
+            $restaurantesDTO = [];
+            foreach ($restaurantesBBDD as $restautanteEntidad) {
+                $restaurantesDTO[] = new RestauranteDTO($restautanteEntidad->getId(), $restautanteEntidad->getName(), null);
             }
-            else{
-                return $this->json($this->restaurantes);  
-            }
+
+            return $this->json($restaurantesDTO);
 
         } catch (\Throwable $th) {
             $errorMensaje = new RespuestaErrorDTO(1000, "Error General");
