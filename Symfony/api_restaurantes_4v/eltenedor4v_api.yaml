@@ -23,16 +23,12 @@ paths:
       parameters:
         - name: tipo
           in: query
-          description: Tipo de restaurante a filtrar
+          description: Tipo de restaurante a filtrar, será un ID de los tipos
           required: false
           explode: true
           schema:
-            type: string
-            default: Italiano
-            enum:
-              - Italiano
-              - Oriental
-              - Latino
+            type: integer
+            default: 1
       responses:
         '200':
           description: Returns OK in all restaurants
