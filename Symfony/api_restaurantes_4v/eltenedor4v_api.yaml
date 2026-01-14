@@ -13,6 +13,8 @@ tags:
     description: Everything about restaurants
   - name: restaurants-types
     description: Everything about the types of restaurantes
+  - name: bookings
+    description: Everything about bookings of restaurants by users
 paths:
   /restaurants:
     get:
@@ -79,6 +81,38 @@ paths:
                   $ref: '#/components/schemas/ErrorResponse'   
         '500':
           description: Any problem in server
+  /bookings:
+    post:
+      tags:
+        - bookings
+      summary: Add a new booking for a user and restaurant
+      description: Add a new booking for a user and restaurant
+      operationId: addBooking
+      requestBody:
+        description: A new Booking information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingNew'
+        required: true
+      responses:
+        '200':
+          description: Returns OK in the booking
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Booking' 
+        '400':
+          description: Validation errors.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorResponse'   
+        '500':
+          description: Any problem in server
   /restaurant-types:
     get:
       tags:
@@ -131,6 +165,47 @@ components:
         name:
           type: string
           example: Oriental
+    BookingNew:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+          example: 2023-11-07T19:20:30+01:00
+        user:
+          type: integer
+          format: int64
+          example: 2
+        restaurant:
+          type: integer
+          format: int64
+          example: 16
+        people:
+          type: integer
+          format: int64
+          example: 4
+    Booking:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        date:
+          type: string
+          format: date
+          example: 2023-11-07T19:20:30+01:00
+        user:
+          type: integer
+          format: int64
+          example: 2
+        restaurant:
+          type: object
+          $ref: '#/components/schemas/Restaurante' 
+        people:
+          type: integer
+          format: int64
+          example: 4
     ErrorResponse:
       type: object
       properties:
